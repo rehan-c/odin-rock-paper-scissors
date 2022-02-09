@@ -120,7 +120,7 @@ function game() {
 game();
 
 //The following code will display the winner at the end of the game.
-if (playerTotalScore >> cpuTotalScore){
+if (playerTotalScore > cpuTotalScore){
     alert("You won the game.");
 } else if(playerTotalScore == cpuTotalScore){
     alert("The game ended in a tie.");
