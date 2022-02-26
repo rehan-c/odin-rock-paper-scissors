@@ -46,4 +46,11 @@ button {
     margin-top: auto;
     justify-content: center;
     font-weight: normal;
+    text-align: center;
+}
+
+#result {
+    max-width: 30vh;
+    justify-content: center;
+    text-align: center;
 }
