@@ -69,6 +69,8 @@ let playerGuess;
 
 computerPlay();
 
+document.getElementById("result").textContent = ("Welcome to Rock Paper Scissors.");
+
 const rockButton = document.getElementById("rock");
 rockButton.addEventListener("click", selectRock);
 
