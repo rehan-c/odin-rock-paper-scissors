@@ -4,12 +4,6 @@ let playerScore = 0;
 //Variable to store cpu score after each best of three. Initializes to zero.
 let cpuScore = 0;
 
-//Variable to store cpu score after each round. Initializes to zero.
-let playerTotalScore = 0;
-
-//Variable to store cpu score after each round. Initializes to zero.
-let cpuTotalScore = 0;
-
 //cpuChoice stores a random number between 1 and 3, used in cpuGuess
 let cpuChoice;
 
@@ -44,24 +38,24 @@ function playRound(playerSelection, computerSelection) {
     if (playerSelection == "ROCK" && computerSelection == "ROCK") {
         return("Tie - Player chose Rock and CPU chose Rock.")
     } else if (playerSelection == "ROCK" && computerSelection == "PAPER") {
-        cpuScore++;
+        cpuScore = cpuScore + 0.5;
         return("Loss - Player chose Rock and CPU chose Paper.")
     } else if (playerSelection == "ROCK" && computerSelection == "SCISSORS") {
-        playerScore++;
+        playerScore = playerScore + 0.5;
         return("Win - Player chose Rock and CPU chose Scissors.")
     } else if (playerSelection == "PAPER" && computerSelection == "ROCK") {
-        playerScore++;
+        playerScore = playerScore + 0.5;
         return("Win - Player chose Paper and CPU chose Rock.")
     } else if (playerSelection == "SCISSORS" && computerSelection == "ROCK") {
-        cpuScore++;
+        cpuScore = cpuScore + 0.5;
         return("Loss - Player chose Scissors and CPU chose Rock.")
     } else if (playerSelection == "PAPER" && computerSelection == "PAPER") {
         return("Tie - Player chose Paper and CPU chose Paper.")
     } else if (playerSelection == "PAPER" && computerSelection == "SCISSORS") {
-        cpuScore++;
+        cpuScore = cpuScore + 0.5;
         return("Loss - Player chose Paper and CPU chose Scissors.")
     } else if (playerSelection == "SCISSORS" && computerSelection == "PAPER") {
-        playerScore++;
+        playerScore = playerScore + 0.5;
         return("Win - Player chose Scissors and CPU chose Paper.")
     } else if (playerSelection == "SCISSORS" && computerSelection == "SCISSORS") {
         return("Tie - Player chose Scissors and CPU chose Scissors.")
@@ -73,57 +67,90 @@ function playRound(playerSelection, computerSelection) {
 //playerGuess will store the guess the user makes
 let playerGuess;
 
-//function bestOfThree() will create 3 rounds of RPS, and displays the total score after each 3 rounds.
-//this function also contains the code to obtain the user input, then updates playerGuess
+computerPlay();
 
-function bestOfThree() {
-    for (i = 0; i < 3; i++){
-        //We call the function computerPlay() so the cpuGuess is set.
-        computerPlay();
+const rockButton = document.getElementById("rock");
+rockButton.addEventListener("click", selectRock);
 
-        console.log("Player score this best-of-three: ", playerScore);
-        console.log("CPU score this best-of-three: ", cpuScore);
+function selectRock() {
+    playerGuess = "ROCK";
+    computerPlay();
+    console.log(playRound(playerGuess, cpuGuess));
+    document.getElementById("result").textContent = playRound(playerGuess, cpuGuess);
+    document.getElementById("playerScore").textContent = ("Player score this best-of-five: " + playerScore);
+    document.getElementById("cpuScore").textContent = ("CPU score this best-of-five: " + cpuScore);
+    finalResult();
+}
 
-        //The following line gathers the player's guess.
-        playerGuess = prompt("Welcome to Rock Paper Scissors. Type your choice:");
-        //To ensure case-insensitivity of user-input, we force playerGuess .toUpperCase()
-        playerGuess = playerGuess.toUpperCase();
+const paperButton = document.getElementById("paper");
+paperButton.addEventListener("click", selectPaper);
 
-        console.log(playRound(playerGuess, cpuGuess));
-    }
+function selectPaper() {
+    playerGuess = "PAPER";
+    computerPlay();
+    console.log(playRound(playerGuess, cpuGuess));
+    document.getElementById("result").textContent = playRound(playerGuess, cpuGuess);
+    document.getElementById("playerScore").textContent = ("Player score this best-of-five: " + playerScore);
+    document.getElementById("cpuScore").textContent = ("CPU score this best-of-five: " + cpuScore);
+    finalResult();
+}
 
-    //The following code will display the score after the best of three rounds, and update the total score
-    if (playerScore >> cpuScore) {
-        playerTotalScore++;
-        alert("You won this round.\nPlayer Total Score: " + playerTotalScore + "\nCPU Total Score: " + cpuTotalScore);
-    } else if (playerScore << cpuScore) {
-        cpuTotalScore++;
-        alert("You lost this round.\nPlayer Total Score: " + playerTotalScore + "\nCPU Total Score: " + cpuTotalScore);
-    } else if (playerScore == cpuScore) {
-        alert("You tied this round.\nPlayer Total Score: " + playerTotalScore + "\nCPU Total Score: " + cpuTotalScore);
-    } else {
-        alert("You tied this round.\nPlayer Total Score: " + playerTotalScore + "\nCPU Total Score: " + cpuTotalScore);
+const scissorsButton = document.getElementById("scissors");
+scissorsButton.addEventListener("click", selectScissors);
+
+function selectScissors() {
+    playerGuess = "SCISSORS";
+    computerPlay();
+    console.log(playRound(playerGuess, cpuGuess));
+    document.getElementById("result").textContent = playRound(playerGuess, cpuGuess);
+    document.getElementById("playerScore").textContent = ("Player score this best-of-five: " + playerScore);
+    document.getElementById("cpuScore").textContent = ("CPU score this best-of-five: " + cpuScore);
+    finalResult();
+}
+
+const finalResultDiv = document.getElementById("finalResult");
+finalResultDiv.style.display = "none";
+
+function finalResult() {
+    if (playerScore === 5) {
+        rockButton.removeEventListener("click", selectRock);
+        paperButton.removeEventListener("click", selectPaper);
+        scissorsButton.removeEventListener("click", selectScissors);
+        document.getElementById("finalResult").textContent = ("Player has won the game.");
+        finalResultDiv.style.display = "flex";
+        playAgain();
+    } else if (cpuScore === 5) {
+        rockButton.removeEventListener("click", selectRock);
+        paperButton.removeEventListener("click", selectPaper);
+        scissorsButton.removeEventListener("click", selectScissors);
+        document.getElementById("finalResult").textContent = ("CPU has won the game.");
+        finalResultDiv.style.display = "flex";
+        playAgain();
     }
 }
 
-//function game() will call bestOfThree five times, and calling this function will run 5 rounds of bestOfThree
-function game() {
-    for (n = 0; n < 5; n++){
-        //We need to reinitialize the score after each best-of-three
-        playerScore = 0;
-        cpuScore = 0;
-        bestOfThree();
-    }
+const playAgainDiv = document.getElementById("playAgain");
+const playAgainButton = document.createElement("button");
+playAgainButton.setAttribute("id", "playAgain");
+playAgainButton.textContent = "Play again";
+playAgainButton.addEventListener("click", resetGame);
+playAgainDiv.appendChild(playAgainButton);
+playAgainDiv.style.display = "none";
+
+function playAgain() {
+    playAgainDiv.style.display = "flex";
 }
 
-//Calling game() begins the game of RPS. There are 5 rounds, each round is best-of-three.
-game();
-
-//The following code will display the winner at the end of the game.
-if (playerTotalScore > cpuTotalScore){
-    alert("You won the game.");
-} else if(playerTotalScore == cpuTotalScore){
-    alert("The game ended in a tie.");
-} else{
-    alert("You lost the game.");
+function resetGame() {
+    playerScore = 0;
+    cpuScore = 0;
+    console.log("Game reset");
+    rockButton.addEventListener("click", selectRock);
+    paperButton.addEventListener("click", selectPaper);
+    scissorsButton.addEventListener("click", selectScissors);
+    document.getElementById("playerScore").textContent = ("Player score this best-of-five: " + playerScore);
+    document.getElementById("cpuScore").textContent = ("CPU score this best-of-five: " + cpuScore);
+    document.getElementById("result").textContent = ("Game reset.");
+    playAgainDiv.style.display = "none";
+    finalResultDiv.style.display = "none";
 }
